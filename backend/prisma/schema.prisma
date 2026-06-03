@@ -1,0 +1,183 @@
+// ==========================================
+// PRISMA CONFIGURATION
+// ==========================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// USER & IDENTITY
+// ==========================================
+
+model User {
+  id          String    @id @default(uuid())
+  name        String
+  
+  // Optional for flexible signups (Email or Phone)
+  email       String?   @unique
+  phone       String?   @unique
+
+  firebaseUid String?   @unique
+  
+  password    String?
+  role        Role      @default(CUSTOMER)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  addresses   Address[]
+  cart        Cart?
+  orders      Order[]   @relation("CustomerOrders")
+  deliveries  Order[]   @relation("DeliveryUser")
+}
+
+// ==========================================
+// PRODUCT CATALOG
+// ==========================================
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  brand       String
+  description String?
+  price       Float
+  size        String
+  image       String?
+  stock       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+}
+
+// ==========================================
+// LOGISTICS & ADDRESSING
+// ==========================================
+
+model Address {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  fullName  String
+  phone     String
+  street    String
+  city      String
+  state     String
+  pincode   String
+  landmark  String?
+
+  createdAt DateTime @default(now())
+  orders    Order[]
+}
+
+// ==========================================
+// SHOPPING CART (Persistence)
+// ==========================================
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+
+  quantity  Int
+
+  @@unique([cartId, productId])
+}
+
+// ==========================================
+// ORDER MANAGEMENT
+// ==========================================
+
+model Order {
+  id            String        @id @default(uuid())
+
+  userId        String
+  user          User          @relation("CustomerOrders", fields: [userId], references: [id])
+
+  deliveryId    String?
+  delivery      User?         @relation("DeliveryUser", fields: [deliveryId], references: [id])
+
+  addressId     String
+  address       Address       @relation(fields: [addressId], references: [id])
+
+  status        OrderStatus   @default(PLACED)
+  paymentMethod PaymentMethod @default(COD)
+  paymentStatus PaymentStatus @default(PENDING)
+
+  totalAmount   Float
+  items         OrderItem[]
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  name      String
+  price     Float
+  quantity  Int
+}
+
+model Otp {
+  id        String   @id @default(uuid())
+  phone     String
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+// ==========================================
+// ENUMS (System Constants)
+// ==========================================
+
+enum Role {
+  CUSTOMER
+  ADMIN
+  DELIVERY
+}
+
+enum OrderStatus {
+  PLACED
+  CONFIRMED
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  COD
+  ONLINE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}

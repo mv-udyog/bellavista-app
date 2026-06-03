@@ -1,0 +1,9 @@
+{
+  "appId": "com.mvudyog.bellavista",
+  "appName": "Bellavista",
+  "webDir": "dist",
+  "server": {
+    "cleartext": true,
+    "androidScheme": "http"
+  }
+}

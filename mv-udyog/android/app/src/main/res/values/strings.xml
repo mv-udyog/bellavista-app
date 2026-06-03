@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Bellavista</string>
+    <string name="title_activity_main">Bellavista</string>
+    <string name="package_name">com.mvudyog.bellavista</string>
+    <string name="custom_url_scheme">com.mvudyog.bellavista</string>
+</resources>
