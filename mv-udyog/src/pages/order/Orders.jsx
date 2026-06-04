@@ -1,4 +1,5 @@
-import { useCartStore } from "@/store/useCartStore";
+import { useEffect, useState } from "react";
+import api from "@/api/axios.js";
 import MainLayout from "@/layout/MainLayout";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom"; // Added for navigation
@@ -12,8 +13,25 @@ import {
 import BottomNav from "@/components/common/BottomNav";
 
 export default function Orders() {
-  const { orders = [] } = useCartStore();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+  const fetchOrders = async () => {
+    try {
+      const res = await api.get("/orders");
+
+      setOrders(res.data.data || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchOrders();
+}, []);
 
   // Helper for status badge styling
   const getStatusStyles = (status) => {
@@ -82,7 +100,13 @@ export default function Orders() {
                         </p>
                         <div className="flex items-center gap-1.5 mt-0.5">
                           <Clock size={12} className="text-slate-400" />
-                          <p className="text-xs text-slate-500 font-medium">{order.date}</p>
+                          <p className="text-xs text-slate-500 font-medium">{new Date(order.createdAt).toLocaleString("en-IN", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+})}</p>
                         </div>
                       </div>
                     </div>
@@ -109,7 +133,7 @@ export default function Orders() {
                       </div>
                       <div className="text-right">
                         <p className="text-xs text-slate-400 font-medium">Total Amount</p>
-                        <p className="text-base font-black text-slate-900">₹{order.total}</p>
+                        <p className="text-base font-black text-slate-900">₹{order.totalAmount}</p>
                       </div>
                     </div>
                   </div>

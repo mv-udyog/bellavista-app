@@ -10,12 +10,12 @@ export const useCartStore = create(
       // ✅ PERSISTENT ADDRESS STATE
       // This will stay saved until the user manually edits it
       address: {
-        name: "Rajesh Kumar",
-        street: "123 MG Road, Andheri East",
-        city: "Mumbai",
-        state: "Maharashtra",
-        zipCode: "400069",
-        phone: "+91 98765 43210",
+        name: "",
+        street: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        phone: "",
       },
 
       // ✅ ACTION TO UPDATE ADDRESS

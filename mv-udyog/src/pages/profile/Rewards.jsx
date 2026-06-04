@@ -2,7 +2,9 @@ import MainLayout from "@/layout/MainLayout";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useCartStore } from "@/store/useCartStore";
+import { useEffect, useState } from "react";
+import api from "@/api/axios.js";
+
 import {
   Gift,
   Trophy,
@@ -14,7 +16,13 @@ import {
 export default function Rewards() {
   const navigate = useNavigate();
 
-const { orders = [] } = useCartStore();
+const [orders, setOrders] = useState([]);
+
+useEffect(() => {
+  api.get("/orders")
+    .then((res) => setOrders(res.data.data || []))
+    .catch(console.error);
+}, []);
 
 const totalBoxes = orders.reduce(
   (orderTotal, order) =>

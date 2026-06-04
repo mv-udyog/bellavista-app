@@ -49,11 +49,17 @@ export const protect = (req, res, next) => {
  */
 export const authorize = (...roles) => {
   return (req, res, next) => {
-    // If the user's role isn't in the allowed list, block them
+
+    console.log("========== AUTHORIZE ==========");
+    console.log("USER:", req.user);
+    console.log("USER ROLE:", req.user?.role);
+    console.log("ALLOWED ROLES:", roles);
+    console.log("===============================");
+
     if (!req.user || !roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
-        message: `Access denied. You do not have permission to perform this action.`,
+        message: "Access denied.",
       });
     }
 

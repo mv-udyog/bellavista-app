@@ -1,9 +1,10 @@
 import { useCartStore } from "@/store/useCartStore";
 import MainLayout from "@/layout/MainLayout";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNotificationStore } from "@/store/useNotificationStore";
+import api from "@/api/axios";
 import { 
   MapPin, 
   Calendar, 
@@ -25,7 +26,6 @@ export default function Checkout() {
   clearCart,
   address,
   setAddress,
-  placeOrder,
 } = useCartStore();
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,7 +37,18 @@ export default function Checkout() {
 
   const selectedDate = location.state?.selectedDate || "Not selected";
   const subtotal = items.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);
-  const total = subtotal;
+  const user = JSON.parse(
+  localStorage.getItem("user") || "{}"
+);
+
+useEffect(() => {
+  if (user?.phone && !address.phone) {
+    setAddress({
+      ...address,
+      phone: user.phone,
+    });
+  }
+}, []);
 
   // ✅ Helper to update individual address fields in the store
   const updateAddressField = (field, value) => {
@@ -73,30 +84,18 @@ export default function Checkout() {
 
 const result = await response.json();
 
-const localOrder = placeOrder({
-  id: result.orderId,
-  status: "PLACED",
-
-  createdAt: new Date().toISOString(),
-
-  date: new Date().toLocaleString("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }),
-});
+clearCart();
 
 addNotification("🎉 Order placed successfully!");
 
 navigate("/order-success", {
   state: {
-    order: localOrder,
+    orderId: result.orderId,
     date: selectedDate,
     total,
   },
 });
+
     } catch (error) {
       console.error("Order error:", error);
       addNotification("❌ Failed to place order. Try again.");

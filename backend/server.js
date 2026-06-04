@@ -145,6 +145,66 @@ app.post('/api/orders/place', authenticateToken, async (req, res) => {
 });
 
 // ==========================================
+// CUSTOMER ORDERS
+// ==========================================
+
+app.get("/api/orders", authenticateToken, async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: req.user.userId,
+      },
+      include: {
+        items: true,
+        address: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      data: orders,
+    });
+
+  } catch (error) {
+    console.error("Fetch Orders Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch orders",
+    });
+  }
+});
+
+app.get("/api/user/default-address", authenticateToken, async (req, res) => {
+  try {
+    const address = await prisma.address.findFirst({
+      where: {
+        userId: req.user.userId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      data: address,
+    });
+
+  } catch (error) {
+    console.error("Address Fetch Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch address",
+    });
+  }
+});
+
+// ==========================================
 // ADMIN ROUTES
 // ==========================================
 
