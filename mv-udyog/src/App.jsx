@@ -18,7 +18,7 @@ import OrderSuccess from "./pages/order/OrderSuccess";
 import OrderTracking from "./pages/order/OrderTracking";
 
 import Payments from "./pages/profile/Payments";
-import Subscriptions from "./pages/profile/Subscriptions";
+import Rewards from "./pages/profile/Rewards";
 
 // ADMIN
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -121,10 +121,10 @@ function App() {
         />
 
         <Route
-          path="/subscriptions"
+          path="/rewards"
           element={
             <ProtectedRoute>
-              <Subscriptions />
+              <Rewards />
             </ProtectedRoute>
           }
         />

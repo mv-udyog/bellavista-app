@@ -96,11 +96,16 @@ export default function Orders() {
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="text-sm font-bold text-slate-800">
-                          {order.items?.length || 1} {order.items?.length === 1 ? 'Item' : 'Items'}
-                        </p>
+  {order.items?.reduce(
+    (total, item) =>
+      total + (item.quantity || 0),
+    0
+  ) || 0} Boxes
+</p>
                         <p className="text-xs text-slate-400 mt-0.5 truncate w-48">
-                          {order.items?.map(item => item.name).join(", ") || "Bellavista Natural Water"}
-                        </p>
+  {order.items?.[0]?.name ||
+    "Bellavista Natural"}
+</p>
                       </div>
                       <div className="text-right">
                         <p className="text-xs text-slate-400 font-medium">Total Amount</p>

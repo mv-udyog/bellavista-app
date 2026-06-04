@@ -76,6 +76,16 @@ const result = await response.json();
 const localOrder = placeOrder({
   id: result.orderId,
   status: "PLACED",
+
+  createdAt: new Date().toISOString(),
+
+  date: new Date().toLocaleString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }),
 });
 
 addNotification("🎉 Order placed successfully!");

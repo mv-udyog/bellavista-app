@@ -29,13 +29,14 @@ export default function Home() {
     const timer = setTimeout(() => {
       setProducts([
         // Bellavista - Natural Mineral Water
-        { id: "b1", name: "Bellavista Natural", size: "200ml (Pack of 48 Bottles)", price: 320, category: "Bellavista", image: "/b200.png" },
-        { id: "b2", name: "Bellavista Natural", size: "1L (Pack of 24 Bottles)", price: 240, category: "Bellavista", image: "/b1l.png" },
+        { id: "b1", name: "Bellavista Natural", size: "200ml (Pack of 48)", price: 320, category: "Bellavista", image: "/b200.png" },
+        { id: "b2", name: "Bellavista Natural", size: "1L (Pack of 12)", price: 240, category: "Bellavista", image: "/b1l.png" },
         // Ozaano - Premium Packaged
-        { id: "o1", name: "Ozaano Premium", size: "250ml", price: 80, category: "Ozaano", image: "/o250.png" },
-        { id: "o2", name: "Ozaano Premium", size: "1L", price: 240, category: "Ozaano", image: "/o1l.png" },
+        { id: "o1", name: "Ozaano Premium", size: "250ml (Pack of 24)", price: 100, category: "Ozaano", image: "/o250.png" },
+        { id: "o2", name: "Ozaano Premium", size: "1L (Pack of 12)", price: 110, category: "Ozaano", image: "/o1l.png" },
         // Siggnature
-        { id: "s1", name: "Siggnature Gold", size: "1L", price: 25, category: "Siggnature", image: "/s1l.png" },
+        { id: "s1", name: "Siggnature Gold", size: "250ml (Pack of 24)", price: 100, category: "Siggnature", image: "/o250.png" },
+        { id: "s2", name: "Siggnature Gold", size: "1L (Pack of 12)", price: 110, category: "Siggnature", image: "/o1l.png" },
       ]);
       setLoading(false);
     }, 800);
@@ -72,7 +73,7 @@ export default function Home() {
               <img src="/logo.png" alt="MV Udyog Logo" className="w-8 h-8 object-contain" />
             </div>
             <div>
-              <h1 className="text-xl font-black text-slate-900 leading-none tracking-tight">M V UDYOG</h1>
+              <h1 className="text-xl font-black text-slate-900 leading-none tracking-tight">M V UDYOG PVT LTD</h1>
               <div className="flex items-center gap-1 mt-1">
                 <MapPin size={10} className="text-blue-500" />
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Deliver to Delhi NCR</p>

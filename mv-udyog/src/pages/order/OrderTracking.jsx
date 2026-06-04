@@ -17,14 +17,92 @@ export default function OrderTracking() {
   const navigate = useNavigate();
   const location = useLocation();
   const order = location.state?.order;
+  console.log("TRACK ORDER", order);
 
   // Mock tracking data (In a real app, this comes from an API)
-  const trackingSteps = [
-    { title: "Order Placed", desc: "We have received your request", time: "10:30 AM", status: "completed" },
-    { title: "Quality Check", desc: "Bellavista Purity Standards verified", time: "11:15 AM", status: "completed" },
-    { title: "Out for Delivery", desc: "Driver is heading to your location", time: "12:05 PM", status: "current" },
-    { title: "Delivered", desc: "Enjoy your mountain-fresh water", time: "--:--", status: "pending" },
-  ];
+  const orderDate = order?.date
+  ? new Date(order.date)
+  : new Date();
+
+const now = new Date();
+
+const qualityCheckDate = new Date(
+  orderDate.getTime() + 2 * 60 * 60 * 1000
+);
+
+const dispatchDate = new Date(
+  orderDate.getTime() + 4 * 60 * 60 * 1000
+);
+
+const qualityCompleted =
+  now >= qualityCheckDate;
+
+const dispatchCompleted =
+  now >= dispatchDate;
+
+const placedTime = orderDate.toLocaleTimeString([], {
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+const qualityTime = qualityCompleted
+  ? qualityCheckDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  : "--:--";
+
+const dispatchTime = dispatchCompleted
+  ? dispatchDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  : "--:--";
+
+const trackingSteps = [
+  {
+    title: "Order Placed",
+    desc: "Order received successfully",
+    time: placedTime,
+    status: "completed",
+  },
+
+  {
+    title: "Quality Check",
+    desc: qualityCompleted
+      ? "Bellavista purity verification completed"
+      : "Awaiting quality inspection",
+    time: qualityTime,
+    status: qualityCompleted
+      ? "completed"
+      : "pending",
+  },
+
+  {
+    title: "Out For Delivery",
+    desc: dispatchCompleted
+      ? "Your order is on the way"
+      : "Waiting for dispatch",
+    time: dispatchTime,
+    status: dispatchCompleted
+      ? "completed"
+      : "pending",
+  },
+
+  {
+    title: "Delivered",
+    desc: "Enjoy your Bellavista water",
+    time:
+      order?.status === "DELIVERED"
+        ? "Completed"
+        : "--:--",
+    status:
+      order?.status === "DELIVERED"
+        ? "completed"
+        : "pending",
+  },
+]; 
+
 
   return (
     <MainLayout>
@@ -39,6 +117,7 @@ export default function OrderTracking() {
         </div>
 
         <div className="px-5 py-6 space-y-6">
+          
           
           {/* --- LIVE STATUS MAP PLACEHOLDER --- */}
           <motion.div 
@@ -59,7 +138,7 @@ export default function OrderTracking() {
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Vehicle No.</p>
-                  <p className="text-sm font-black text-slate-900">MH-02-BV-2026</p>
+                  <p className="text-sm font-black text-slate-900">DL-1L-AQ-2256</p>
                 </div>
               </div>
               <button className="bg-blue-600 p-2.5 rounded-xl text-white shadow-lg shadow-blue-200">

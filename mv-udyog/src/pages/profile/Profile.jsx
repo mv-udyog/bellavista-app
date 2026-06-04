@@ -182,10 +182,10 @@ export default function Profile() {
 
               <ProfileOption
                 icon={CalendarCheck}
-                title="Subscriptions"
+                title="Rewards"
                 subtitle="Manage your daily water delivery"
                 onClick={() =>
-                  navigate("/subscriptions")
+                  navigate("/rewards")
                 }
               />
             </div>
