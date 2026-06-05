@@ -99,6 +99,7 @@ app.post('/api/auth/login', async (req, res) => {
 
 app.post('/api/orders/place', authenticateToken, async (req, res) => {
   const { items, totalAmount, address, paymentMethod } = req.body;
+  console.log("ORDER ITEMS RECEIVED:", items);
 
   try {
     // 1. Create Address (Matches Address model)

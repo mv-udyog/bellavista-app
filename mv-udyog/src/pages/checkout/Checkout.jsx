@@ -36,8 +36,15 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState("COD");
 
   const selectedDate = location.state?.selectedDate || "Not selected";
-  const subtotal = items.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);
-  const user = JSON.parse(
+
+const subtotal = items.reduce(
+  (acc, item) => acc + item.price * (item.quantity || 1),
+  0
+);
+
+const total = subtotal;
+
+const user = JSON.parse(
   localStorage.getItem("user") || "{}"
 );
 
@@ -56,6 +63,7 @@ useEffect(() => {
   };
 
   const handlePlaceOrder = async () => {
+    console.log("CART ITEMS", items);
     if (items.length === 0 || placingOrder) return;
     setPlacingOrder(true);
 
@@ -69,10 +77,11 @@ useEffect(() => {
         },
         body: JSON.stringify({
           items: items.map(item => ({
-            id: item.id,
-            quantity: item.quantity,
-            price: item.price
-          })),
+  id: item.id,
+  name: item.name,   // ← ye add kar
+  quantity: item.quantity,
+  price: item.price
+})),
           totalAmount: total,
           address: address, // Store address is sent
           paymentMethod: paymentMethod,

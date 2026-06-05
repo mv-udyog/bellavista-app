@@ -19,6 +19,14 @@ export const createOrder = async (userId, addressId, paymentMethod = "COD") => {
       },
     },
   });
+  console.log(
+  "CART PRODUCTS:",
+  cart.items.map(item => ({
+    productId: item.productId,
+    productName: item.product?.name,
+    quantity: item.quantity
+  }))
+);
 
   if (!cart || cart.items.length === 0) {
     throw new Error("Your cart is empty. Add some Bellavista to continue!");
