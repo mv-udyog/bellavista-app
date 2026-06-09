@@ -101,24 +101,31 @@ const tier =
         <div className="px-5 pt-6 space-y-6">
 
           {/* HEADER */}
-          <div className="flex items-center gap-3">
+<div className="mb-2">
 
-  <div>
-    <h1 className="text-3xl font-black text-slate-900">
-      Rewards Club
-    </h1>
-
-    <p className="text-slate-500 font-medium mt-1">
-      Earn points. Unlock free Bellavista boxes.
-    </p>
+  <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full">
+    <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+    <span className="text-[10px] font-black uppercase tracking-widest text-blue-700">
+      Bellavista Loyalty Program
+    </span>
   </div>
+
+  <h1 className="text-4xl font-black text-slate-900 mt-4 leading-none">
+    Rewards
+    <span className="text-blue-600"> Vault</span>
+  </h1>
+
+  <p className="text-slate-500 font-medium mt-3 max-w-sm">
+    Turn every Bellavista order into points, unlock free boxes and exclusive member rewards.
+  </p>
+
 </div>
 
           {/* HERO CARD */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-[2rem] p-6 bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white shadow-2xl"
+            className="relative overflow-hidden rounded-[2.5rem] p-8 bg-gradient-to-br from-slate-950 via-blue-950 to-cyan-700 text-white shadow-[0_20px_80px_rgba(37,99,235,0.35)]"
           >
             <p className="uppercase tracking-[0.2em] text-xs opacity-80 font-black">
               Bellavista Rewards
@@ -164,24 +171,34 @@ const tier =
           </motion.div>
 
           {/* CURRENT TIER */}
-          <div className="bg-white rounded-[2rem] p-5 shadow-sm">
-            <div className="flex items-center gap-3">
-              <Award
-                size={26}
-                className="text-amber-500"
-              />
+          <div className="bg-white rounded-[2rem] p-6 shadow-lg border border-slate-100">
+  <p className="text-xs font-black tracking-[0.2em] text-slate-400 uppercase">
+    Tier Journey
+  </p>
 
-              <div>
-                <p className="text-xs uppercase tracking-widest text-slate-400 font-black">
-                  Current Tier
-                </p>
+  <div className="flex justify-between mt-6">
+    {["Bronze", "Silver", "Gold", "Platinum"].map((level) => (
+      <div
+        key={level}
+        className="flex flex-col items-center"
+      >
+        <div
+          className={`w-10 h-10 rounded-full flex items-center justify-center font-black ${
+            tier === level
+              ? "bg-blue-600 text-white"
+              : "bg-slate-100 text-slate-400"
+          }`}
+        >
+          ✓
+        </div>
 
-                <h3 className="font-black text-lg text-slate-900">
-                  {tier} Member
-                </h3>
-              </div>
-            </div>
-          </div>
+        <p className="text-[10px] mt-2 font-black uppercase">
+          {level}
+        </p>
+      </div>
+    ))}
+  </div>
+</div>
 
           {/* REWARDS */}
           <div>
@@ -247,18 +264,15 @@ const tier =
           </div>
 
           {/* HOW TO EARN */}
-          <div className="bg-white rounded-[2rem] p-5 shadow-sm">
-            <h2 className="font-black text-slate-900 mb-4">
-              How To Earn
-            </h2>
+          <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-[2rem] p-6 text-white">
+  <h3 className="font-black text-xl">
+    Refer & Earn
+  </h3>
 
-            <div className="space-y-3 text-sm text-slate-600">
-              <p>✅ 1 Box Purchased = 2 Points</p>
-              <p>✅ Points added after delivery</p>
-              <p>✅ Points never expire</p>
-              <p>✅ Redeem anytime</p>
-            </div>
-          </div>
+  <p className="text-blue-100 mt-2">
+    Invite distributors and earn bonus reward points on successful referrals.
+  </p>
+</div>
 
           {/* STATS */}
           <div className="grid grid-cols-3 gap-3">

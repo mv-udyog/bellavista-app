@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useCartStore } from "@/store/useCartStore";
 import {
   Package,
   CreditCard,
@@ -15,6 +16,7 @@ import BottomNav from "@/components/common/BottomNav";
 
 export default function Profile() {
   const navigate = useNavigate();
+  const { setAddress, clearCart } = useCartStore();
 
   // OTP USER
   let user = null;
@@ -30,13 +32,24 @@ export default function Profile() {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
 
-    navigate("/login", {
-      replace: true,
-    });
-  };
+  clearCart();
+
+  setAddress({
+    name: "",
+    street: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    phone: "",
+  });
+
+  navigate("/login", {
+    replace: true,
+  });
+};
 
   const handleWhatsAppSupport = () => {
     const phoneNumber = "917900999574";

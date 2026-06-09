@@ -49,12 +49,44 @@ const user = JSON.parse(
 );
 
 useEffect(() => {
-  if (user?.phone && !address.phone) {
-    setAddress({
-      ...address,
-      phone: user.phone,
-    });
-  }
+  const loadAddress = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await api.get("/user/default-address", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.data?.data?.length > 0) {
+        const latest = res.data.data[0];
+
+        setAddress({
+          id: latest.id,
+          name: latest.fullName,
+          street: latest.street,
+          city: latest.city,
+          state: latest.state,
+          zipCode: latest.pincode,
+          phone: latest.phone,
+        });
+      } else {
+        setAddress({
+          name: "",
+          street: "",
+          city: "",
+          state: "",
+          zipCode: "",
+          phone: user?.phone || "",
+        });
+      }
+    } catch (err) {
+      console.log("Address fetch failed", err);
+    }
+  };
+
+  loadAddress();
 }, []);
 
   // ✅ Helper to update individual address fields in the store
@@ -63,9 +95,51 @@ useEffect(() => {
   };
 
   const handlePlaceOrder = async () => {
-    console.log("CART ITEMS", items);
-    if (items.length === 0 || placingOrder) return;
-    setPlacingOrder(true);
+  console.log("CART ITEMS", items);
+
+  if (items.length === 0 || placingOrder) return;
+
+  // ADDRESS VALIDATION
+  if (
+    !address?.name?.trim() ||
+    !address?.street?.trim() ||
+    !address?.city?.trim() ||
+    !address?.state?.trim() ||
+    !address?.zipCode?.trim() ||
+    !address?.phone?.trim()
+  ) {
+    addNotification(
+      "⚠️ Please complete your delivery details"
+    );
+
+    setShowAddressModal(true);
+
+    return;
+  }
+
+  // PINCODE VALIDATION
+  if (!/^\d{6}$/.test(address.zipCode)) {
+    addNotification(
+      "⚠️ Enter valid 6 digit pincode"
+    );
+
+    setShowAddressModal(true);
+
+    return;
+  }
+
+  // PHONE VALIDATION
+  if (!/^\d{10}$/.test(address.phone)) {
+    addNotification(
+      "⚠️ Enter valid 10 digit phone number"
+    );
+
+    setShowAddressModal(true);
+
+    return;
+  }
+
+  setPlacingOrder(true);
 
     try {
       const token = localStorage.getItem("token");
@@ -256,13 +330,31 @@ navigate("/order-success", {
                     />
                   </div>
                   <div className="relative group">
-                    <input 
-                      value={address.state} 
-                      onChange={(e) => updateAddressField('state', e.target.value)} 
-                      className="w-full bg-slate-50 p-4 rounded-2xl outline-none border border-transparent focus:border-blue-100" 
-                      placeholder="State" 
-                    />
-                  </div>
+  <select
+    value={address.state}
+    onChange={(e) => updateAddressField("state", e.target.value)}
+    className="w-full bg-slate-50 p-4 rounded-2xl outline-none border border-transparent focus:border-blue-100"
+  >
+    <option value="">Select State</option>
+
+    <option value="Delhi">Delhi</option>
+    <option value="Uttar Pradesh">Uttar Pradesh</option>
+    <option value="Haryana">Haryana</option>
+    <option value="Punjab">Punjab</option>
+    <option value="Rajasthan">Rajasthan</option>
+    <option value="Maharashtra">Maharashtra</option>
+    <option value="Gujarat">Gujarat</option>
+    <option value="Madhya Pradesh">Madhya Pradesh</option>
+    <option value="Bihar">Bihar</option>
+    <option value="Jharkhand">Jharkhand</option>
+    <option value="West Bengal">West Bengal</option>
+    <option value="Karnataka">Karnataka</option>
+    <option value="Tamil Nadu">Tamil Nadu</option>
+    <option value="Kerala">Kerala</option>
+    <option value="Telangana">Telangana</option>
+    <option value="Andhra Pradesh">Andhra Pradesh</option>
+  </select>
+</div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">

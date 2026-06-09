@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useCartStore } from "@/store/useCartStore";
+import { useNotificationStore } from "@/store/useNotificationStore";
 import api from "@/api/axios.js";
 import MainLayout from "@/layout/MainLayout";
 import { motion } from "framer-motion";
@@ -47,6 +49,31 @@ export default function Orders() {
         return "bg-slate-50 text-slate-600 border-slate-100";
     }
   };
+
+const { addItem, clearCart } = useCartStore();
+const { addNotification } = useNotificationStore();
+
+const handleReorder = (order) => {
+  if (!order?.items?.length) {
+    addNotification("No items found in this order");
+    return;
+  }
+
+  clearCart();
+
+  order.items.forEach((item) => {
+    addItem({
+      id: item.productId, // IMPORTANT CHANGE
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+    });
+  });
+
+  addNotification("Items added to cart");
+
+  navigate("/checkout");
+};
 
   return (
     <MainLayout>
@@ -149,13 +176,14 @@ export default function Orders() {
                       View Details
                     </button>
                     
-                    <motion.button 
-                      whileTap={{ scale: 0.97 }}
-                      className="flex-1 bg-blue-600 py-2.5 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2 shadow-md shadow-blue-50"
-                    >
-                      <RotateCcw size={14} />
-                      Reorder
-                    </motion.button>
+                   <motion.button
+  whileTap={{ scale: 0.97 }}
+  onClick={() => handleReorder(order)}
+  className="flex-1 bg-blue-600 py-2.5 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2 shadow-md shadow-blue-50"
+>
+  <RotateCcw size={14} />
+  Reorder
+</motion.button>
                   </div>
                 </motion.div>
               ))}
